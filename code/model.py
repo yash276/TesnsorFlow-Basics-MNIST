@@ -1,5 +1,7 @@
+from matplotlib import pyplot as plt
 from utils import randomMiniBatches
 import tensorflow as tf
+import numpy as np
 
 def createPlaceHolders(inputFeatures,numofClasses):
     X = tf.placeholder(dtype=tf.float32, shape=[inputFeatures, None])
@@ -113,3 +115,24 @@ def model(trainData, trainLabels, testData, testLabels, learningRate = 0.0001,
                 print("Cost after epoch %i: %f" % (epoch, epochCost))
             if printCost == True and epoch % 5 == 0:
                 costs.append(epochCost)
+        # plot the cost
+        plt.plot(np.squeeze(costs))
+        plt.ylabel('cost')
+        plt.xlabel('iterations (per fives)')
+        plt.title("Learning rate =" + str(learningRate))
+        plt.savefig("cost.png")
+        plt.show()
+        # Let's save the learned parameters in a variable
+        parameters = sess.run(parameters)
+        print("Parameters have been trained!")
+
+        # Calculate the correct predictions
+        correct_prediction = tf.equal(tf.argmax(logits), tf.argmax(Y))
+
+        # Calculate accuracy on the test set
+        accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+
+        print("Train Accuracy:", accuracy.eval({X: trainData, Y: trainLabels}))
+        print("Test Accuracy:", accuracy.eval({X: testData, Y: testLabels}))
+
+        return parameters

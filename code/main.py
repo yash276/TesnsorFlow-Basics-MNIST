@@ -33,12 +33,12 @@ if __name__ == '__main__':
     # 10 is for number of classes
     trainLabels = one_hot_matrix(trainLabels, 10).T
     testLabels = dataset.testLabel
-    # 10 is for number of classes
+    # 10 is for number of classes7
     testLabels = one_hot_matrix(testLabels, 10).T
     print("Training Data after Flatten and One-Hot Encoding")
     print(trainData.shape, trainLabels.shape)
     print("Testing Data after Flatten and One-Hot Encoding")
     print(testData.shape, testLabels.shape)
 
-    model(trainData=trainData,trainLabels=trainLabels,testData=testData,testLabels=testLabels,
+    parameters = model(trainData=trainData,trainLabels=trainLabels,testData=testData,testLabels=testLabels,
           bacthSize=cfg['batchSize'])
