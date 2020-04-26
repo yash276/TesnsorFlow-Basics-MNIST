@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-from utils import randomMiniBatches
+from utils import randomMiniBatchesMLP
 import tensorflow as tf
 import numpy as np
 
@@ -91,6 +91,7 @@ def model(trainData, trainLabels, testData, testLabels, learningRate = 0.0001,
 
     # Start a new tensorFlow Session
     with tf.Session() as sess:
+        print("Training the MLP model")
         # run the initialization
         sess.run(init)
         # The training loop
@@ -102,7 +103,7 @@ def model(trainData, trainLabels, testData, testLabels, learningRate = 0.0001,
             # For a new epoch set cost to 0
             epochCost = 0
             seed += 1
-            miniBatches = randomMiniBatches(trainData, trainLabels, bacthSize,seed)
+            miniBatches = randomMiniBatchesMLP(trainData, trainLabels, bacthSize,seed)
             # iterate over all the minibatch and update the parameters
             for miniBatch in miniBatches:
                 (miniBatchX , miniBatchY) = miniBatch
@@ -120,7 +121,7 @@ def model(trainData, trainLabels, testData, testLabels, learningRate = 0.0001,
         plt.ylabel('cost')
         plt.xlabel('iterations (per fives)')
         plt.title("Learning rate =" + str(learningRate))
-        plt.savefig("cost.png")
+        plt.savefig("costMLP.png")
         plt.show()
         # Let's save the learned parameters in a variable
         parameters = sess.run(parameters)
@@ -136,3 +137,29 @@ def model(trainData, trainLabels, testData, testLabels, learningRate = 0.0001,
         print("Test Accuracy:", accuracy.eval({X: testData, Y: testLabels}))
 
         return parameters
+
+def predict(parameters,testData,testLabels):
+    # convert them to tensors
+    W1 = tf.convert_to_tensor(parameters['W1'])
+    b1 = tf.convert_to_tensor(parameters['b1'])
+    W2 = tf.convert_to_tensor(parameters['W2'])
+    b2 = tf.convert_to_tensor(parameters['b2'])
+    W3 = tf.convert_to_tensor(parameters['W3'])
+    b3 = tf.convert_to_tensor(parameters['b3'])
+    # create the parameter dictionary for forward pass
+    params = {"W1": W1,
+                  "b1": b1,
+                  "W2": W2,
+                  "b2": b2,
+                  "W3": W3,
+                  "b3": b3}
+    # create the input placeHolder7
+    X = tf.placeholder(dtype=tf.float32, shape=[testData.shape[0], None])
+    # make the forward pass node
+    Z3 = forwardPropogation(X,params)
+    output = tf.argmax(Z3)
+    # run the Session and get the predictions777
+    sess = tf.Session()
+    predictions = sess.run(output,feed_dict={X:testData})
+
+    return predictions

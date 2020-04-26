@@ -1,3 +1,6 @@
 trainDir : "../data/training"
 testDir : "../data/testing"
 batchSize : 8
+# Set 0 for Multi-Layer Perceptron
+# Set 1 for Convolution Network
+network : 0
